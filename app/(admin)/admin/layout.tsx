@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	ChevronLeft,
 	BarChart3,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 export default function AdminLayout({
 	children,
@@ -20,7 +21,15 @@ export default function AdminLayout({
 	children: React.ReactNode;
 }) {
 	const [sidebarOpen, setSidebarOpen] = useState(true);
-	const { user, logout } = useAuth();
+	const { user, logout, isLoading } = useAuth();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (isLoading) return;
+		if (!user || user.role !== "admin") {
+			router.replace("/");
+		}
+	}, [user, isLoading, router]);
 
 	const navItems = [
 		{ label: "Dashboard", icon: BarChart3, href: "/admin" },

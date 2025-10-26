@@ -137,7 +137,7 @@ export default function Home() {
 							variant="outline"
 							size="icon"
 							onClick={() => setShowHistory(!showHistory)}
-							className="glass-card hover:border-primary hover:glow-primary hover:scale-110 transition-all duration-300"
+							className="relative glass-card hover:border-primary hover:glow-primary hover:scale-110 transition-all duration-300"
 							disabled={loadingHistory}
 						>
 							{loadingHistory ? (

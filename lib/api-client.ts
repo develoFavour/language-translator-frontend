@@ -93,6 +93,10 @@ export const api = {
 			return data;
 		},
 
+		me: async () => {
+			return fetchAPI("/auth/me");
+		},
+
 		logout: () => {
 			localStorage.removeItem("token");
 			localStorage.removeItem("user");

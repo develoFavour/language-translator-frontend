@@ -29,7 +29,7 @@ export function HistoryPanel({
 				onClick={onClose}
 			/>
 
-			<div className="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-sidebar border-l border-sidebar-border z-50 flex flex-col animate-in slide-in-from-right duration-300">
+			<div className="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-sidebar border-l border-sidebar-border z-50 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300">
 				{/* Header */}
 				<div className="p-6 border-b border-sidebar-border flex items-center justify-between">
 					<div className="flex items-center gap-3">
@@ -49,7 +49,7 @@ export function HistoryPanel({
 				</div>
 
 				{/* History List */}
-				<ScrollArea className="flex-1 p-4">
+				<ScrollArea className="flex-1 h-full p-4 overscroll-contain">
 					{translations.length === 0 ? (
 						<div className="text-center py-12 animate-in fade-in duration-500">
 							<Clock className="h-12 w-12 text-sidebar-foreground/30 mx-auto mb-4" />

@@ -6,29 +6,36 @@ import StatCard from "@/components/admin/stat-card";
 import UserGrowthChart from "@/components/admin/charts/user-growth-chart";
 import TranslationVolumeChart from "@/components/admin/charts/translation-volume-chart";
 import FeedbackRatingsChart from "@/components/admin/charts/feedback-ratings-chart";
+import { api } from "@/lib/api-client";
 
 export default function AdminDashboard() {
 	const [stats, setStats] = useState({
-		totalUsers: 1250,
-		activeUsers: 842,
-		totalTranslations: 15420,
-		avgFeedbackRating: 4.6,
+		totalUsers: 0,
+		activeUsers: 0, // not provided by backend yet
+		totalTranslations: 0,
+		avgFeedbackRating: 0, // not provided by backend yet
 	});
 
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		// Fetch stats from your backend API
-		// const fetchStats = async () => {
-		//   try {
-		//     const response = await fetch('/api/admin/stats')
-		//     const data = await response.json()
-		//     setStats(data)
-		//   } catch (error) {
-		//     console.error('Error fetching stats:', error)
-		//   }
-		// }
-		// fetchStats()
+		const fetchStats = async () => {
+			setLoading(true);
+			try {
+				const data = await api.admin.getStats();
+				// backend returns { stats: { totalUsers, totalTranslations, totalConversations, totalFeedbacks } }
+				setStats((prev) => ({
+					...prev,
+					totalUsers: data.stats?.totalUsers ?? 0,
+					totalTranslations: data.stats?.totalTranslations ?? 0,
+				}));
+			} catch (e) {
+				console.error("Error fetching admin stats", e);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchStats();
 	}, []);
 
 	return (

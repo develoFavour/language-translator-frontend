@@ -13,6 +13,7 @@ interface User {
 	id: string;
 	email: string;
 	name: string;
+	role: string;
 }
 
 interface AuthContextType {
@@ -32,12 +33,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const storedUser = localStorage.getItem("user");
-		const token = localStorage.getItem("token");
-		if (storedUser && token) {
-			setUser(JSON.parse(storedUser));
-		}
-		setIsLoading(false);
+		const init = async () => {
+			const token = localStorage.getItem("token");
+			if (!token) {
+				// ensure role cookie is cleared if no token
+				document.cookie = "role=; path=/; max-age=0; sameSite=Lax";
+				setIsLoading(false);
+				return;
+			}
+			try {
+				const data = await api.auth.me();
+				const user: User = {
+					id: data.user.id,
+					email: data.user.email,
+					name: data.user.name,
+					role: data.user.role,
+				};
+				setUser(user);
+				localStorage.setItem("user", JSON.stringify(user));
+				// Set role cookie for middleware (7 days to match token lifetime)
+				document.cookie = `role=${user.role}; path=/; max-age=${7 * 24 * 60 * 60}; sameSite=Lax`;
+			} catch (e) {
+				api.auth.logout();
+				setUser(null);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		init();
 	}, []);
 
 	const login = async (email: string, password: string) => {
@@ -48,9 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				id: data.user.id,
 				email: data.user.email,
 				name: data.user.name,
+				role: data.user.role,
 			};
 			setUser(user);
 			localStorage.setItem("user", JSON.stringify(user));
+			document.cookie = `role=${user.role}; path=/; max-age=${7 * 24 * 60 * 60}; sameSite=Lax`;
 		} catch (err) {
 			if (err instanceof APIError) {
 				setError(err.message);
@@ -69,9 +94,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				id: data.user.id,
 				email: data.user.email,
 				name: data.user.name,
+				role: data.user.role,
 			};
 			setUser(user);
 			localStorage.setItem("user", JSON.stringify(user));
+			document.cookie = `role=${user.role}; path=/; max-age=${7 * 24 * 60 * 60}; sameSite=Lax`;
 		} catch (err) {
 			if (err instanceof APIError) {
 				setError(err.message);
@@ -85,6 +112,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const logout = () => {
 		api.auth.logout();
 		setUser(null);
+		// Clear role cookie
+		document.cookie = "role=; path=/; max-age=0; sameSite=Lax";
 	};
 
 	return (
