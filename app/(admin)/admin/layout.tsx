@@ -10,6 +10,8 @@ import {
 	MessageSquare,
 	Settings,
 	LogOut,
+	Menu,
+	HomeIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -20,9 +22,17 @@ export default function AdminLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
 	const { user, logout, isLoading } = useAuth();
 	const router = useRouter();
+
+	useEffect(() => {
+		const checkMobile = () => setIsMobile(window.innerWidth < 768);
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
+	}, []);
 
 	useEffect(() => {
 		if (isLoading) return;
@@ -37,13 +47,25 @@ export default function AdminLayout({
 		{ label: "Feedbacks", icon: MessageSquare, href: "/admin/feedbacks" },
 	];
 
+	const handleNavigation = (href: string) => {
+		router.push(href);
+		if (isMobile) setSidebarOpen(false);
+	};
+
 	return (
-		<div className="flex h-screen bg-black">
+		<div className="flex h-screen bg-black flex-col md:flex-row">
+			{sidebarOpen && isMobile && (
+				<div
+					className="fixed inset-0 bg-black/50 z-40 md:hidden"
+					onClick={() => setSidebarOpen(false)}
+				/>
+			)}
+
 			{/* Sidebar */}
 			<div
 				className={`${
 					sidebarOpen ? "w-64" : "w-0"
-				} transition-all duration-300 ease-in-out bg-gradient-to-b from-slate-900 to-black border-r border-slate-800 flex flex-col overflow-hidden`}
+				} fixed md:relative md:w-64 h-screen transition-all duration-300 ease-in-out bg-gradient-to-b from-slate-900 to-black border-r border-slate-800 flex flex-col overflow-hidden z-50`}
 			>
 				{/* Logo */}
 				<div className="p-6 border-b border-slate-800">
@@ -54,17 +76,17 @@ export default function AdminLayout({
 				{/* Navigation */}
 				<nav className="flex-1 p-4 space-y-2">
 					{navItems.map((item) => (
-						<Link
+						<button
 							key={item.href}
-							href={item.href}
-							className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200 group"
+							onClick={() => handleNavigation(item.href)}
+							className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200 group"
 						>
 							<item.icon
 								size={18}
 								className="group-hover:text-cyan-500 transition-colors"
 							/>
 							<span className="text-sm font-medium">{item.label}</span>
-						</Link>
+						</button>
 					))}
 				</nav>
 
@@ -86,28 +108,32 @@ export default function AdminLayout({
 			</div>
 
 			{/* Main Content */}
-			<div className="flex-1 flex flex-col">
+			<div className="flex-1 flex flex-col w-full">
 				{/* Header */}
-				<div className="border-b border-slate-800 bg-gradient-to-r from-slate-900/50 to-black/50 backdrop-blur-sm px-6 py-4 flex items-center justify-between">
+				<div className="border-b border-slate-800 bg-gradient-to-r from-slate-900/50 to-black/50 backdrop-blur-sm px-4 md:px-6 py-4 flex items-center justify-between gap-2">
 					<button
 						onClick={() => setSidebarOpen(!sidebarOpen)}
 						className="p-2 hover:bg-slate-800 rounded-lg transition-colors duration-200"
 					>
-						<ChevronLeft
-							size={20}
-							className={`text-slate-400 transition-transform duration-300 ${
-								!sidebarOpen ? "rotate-180" : ""
-							}`}
-						/>
+						{isMobile ? (
+							<Menu size={20} className="text-slate-400" />
+						) : (
+							<ChevronLeft
+								size={20}
+								className={`text-slate-400 transition-transform duration-300 ${
+									!sidebarOpen ? "rotate-180" : ""
+								}`}
+							/>
+						)}
 					</button>
-					<h1 className="text-lg font-semibold text-white">
+					<h1 className="text-base md:text-lg font-semibold text-white flex-1 text-center">
 						Analytics Dashboard
 					</h1>
 					<Link
 						href="/"
 						className="p-2 hover:bg-slate-800 rounded-lg transition-colors duration-200 text-slate-400 hover:text-slate-200"
 					>
-						<Settings size={20} />
+						<HomeIcon size={20} />
 					</Link>
 				</div>
 

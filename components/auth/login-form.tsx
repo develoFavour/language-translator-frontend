@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { toast } from "sonner";
 
 interface LoginFormProps {
 	onSwitchToSignup: () => void;
@@ -28,6 +29,7 @@ export function LoginForm({ onSwitchToSignup }: LoginFormProps) {
 
 		try {
 			await login(email, password);
+			toast.success("Login successful");
 		} catch (err) {
 			console.log(err);
 			setError("Invalid email or password");
@@ -90,7 +92,7 @@ export function LoginForm({ onSwitchToSignup }: LoginFormProps) {
 
 				<Button
 					type="submit"
-					className="w-full mt-6 border bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+					className="w-full mt-6 cursor-pointer border bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
 					disabled={isLoading}
 				>
 					{isLoading ? (
@@ -111,7 +113,7 @@ export function LoginForm({ onSwitchToSignup }: LoginFormProps) {
 				<button
 					type="button"
 					onClick={onSwitchToSignup}
-					className="text-primary hover:text-accent font-medium transition-colors duration-300"
+					className="text-primary cursor-pointer underline hover:text-accent font-medium transition-colors duration-300"
 				>
 					Sign up
 				</button>

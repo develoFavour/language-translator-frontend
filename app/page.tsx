@@ -6,9 +6,18 @@ import { HistoryPanel } from "@/components/history-panel";
 import { FeedbackModal } from "@/components/feedback-modal";
 import { AuthGate } from "@/components/auth/auth-gate";
 import { Button } from "@/components/ui/button";
-import { History, X, LogOut, User, Loader2 } from "lucide-react";
+import {
+	History,
+	X,
+	LogOut,
+	User,
+	Loader2,
+	LayoutDashboard,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { api } from "@/lib/api-client";
+import { toast } from "sonner";
+import Link from "next/link";
 
 export interface Translation {
 	id: string;
@@ -108,6 +117,7 @@ export default function Home() {
 				feedback.rating,
 				feedback.suggestedText
 			);
+			toast.success("Feedback submitted successfully");
 		} catch (err) {
 			console.error("Failed to submit feedback:", err);
 		}
@@ -133,6 +143,16 @@ export default function Home() {
 					</div>
 
 					<div className="flex items-center gap-2">
+						{user.role === "admin" && (
+							<a
+								href="/admin"
+								className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg glass-card border border-border/50 hover:border-primary hover:glow-primary hover:scale-105 transition-all duration-300"
+								aria-label="Go to Admin Dashboard"
+							>
+								<LayoutDashboard className="h-4 w-4" />
+								<span className="text-sm font-medium">Admin</span>
+							</a>
+						)}
 						<Button
 							variant="outline"
 							size="icon"
@@ -179,11 +199,22 @@ export default function Home() {
 												{user.email}
 											</p>
 										</div>
+										{user.role === "admin" && (
+											<Link
+												href="/admin"
+												className="w-full flex items-center gap-2 px-2 py-2 rounded-md text-foreground hover:bg-primary/10 hover:text-primary transition-colors text-sm mb-1"
+												onClick={() => setShowUserMenu(false)}
+											>
+												<LayoutDashboard className="h-4 w-4" />
+												Admin Dashboard
+											</Link>
+										)}
 										<Button
 											variant="ghost"
 											className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 transition-all"
 											onClick={() => {
 												logout();
+												toast.success("Logout successful");
 												setShowUserMenu(false);
 											}}
 										>
@@ -268,13 +299,13 @@ export default function Home() {
 								Chat with our AI in your native language. Get instant answers
 								and support in Yoruba, Igbo, Hausa, and English.
 							</p>
-							<a
+							<Link
 								href="/chat"
 								className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
 							>
 								Start Chatting
 								<span>→</span>
-							</a>
+							</Link>
 						</div>
 					</div>
 				</div>

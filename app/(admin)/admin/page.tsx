@@ -7,6 +7,7 @@ import UserGrowthChart from "@/components/admin/charts/user-growth-chart";
 import TranslationVolumeChart from "@/components/admin/charts/translation-volume-chart";
 import FeedbackRatingsChart from "@/components/admin/charts/feedback-ratings-chart";
 import { api } from "@/lib/api-client";
+import { toast } from "sonner";
 
 export default function AdminDashboard() {
 	const [stats, setStats] = useState({
@@ -17,9 +18,15 @@ export default function AdminDashboard() {
 	});
 
 	const [loading, setLoading] = useState(false);
-	const [userGrowth, setUserGrowth] = useState<{ date: string; count: number }[]>([]);
-	const [translationLanguages, setTranslationLanguages] = useState<{ language: string; count: number }[]>([]);
-	const [feedbackDist, setFeedbackDist] = useState<{ rating: number; count: number }[]>([]);
+	const [userGrowth, setUserGrowth] = useState<
+		{ date: string; count: number }[]
+	>([]);
+	const [translationLanguages, setTranslationLanguages] = useState<
+		{ language: string; count: number }[]
+	>([]);
+	const [feedbackDist, setFeedbackDist] = useState<
+		{ rating: number; count: number }[]
+	>([]);
 
 	useEffect(() => {
 		const fetchAll = async () => {
@@ -50,18 +57,19 @@ export default function AdminDashboard() {
 	}, []);
 
 	return (
-		<div className="p-8 bg-black min-h-full">
-			<div className="max-w-7xl mx-auto space-y-8">
+		<div className="p-4 sm:p-6 md:p-8 bg-black min-h-full">
+			<div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
 				{/* Header */}
 				<div className="animate-in fade-in slide-in-from-top-4 duration-500">
-					<h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-					<p className="text-slate-400">
+					<h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+						Dashboard
+					</h1>
+					<p className="text-sm sm:text-base text-slate-400">
 						Welcome back! Here&apos;s your platform overview.
 					</p>
 				</div>
 
-				{/* Stats Grid */}
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-4 duration-500 delay-100">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 animate-in fade-in slide-in-from-top-4 duration-500 delay-100">
 					<StatCard
 						title="Total Users"
 						value={stats.totalUsers.toLocaleString()}
@@ -92,8 +100,7 @@ export default function AdminDashboard() {
 					/>
 				</div>
 
-				{/* Charts Grid */}
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-4 duration-500 delay-200">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 animate-in fade-in slide-in-from-top-4 duration-500 delay-200">
 					<UserGrowthChart data={userGrowth} />
 					<TranslationVolumeChart languages={translationLanguages} />
 				</div>

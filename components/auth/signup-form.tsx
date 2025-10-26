@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { toast } from "sonner";
 
 interface SignupFormProps {
 	onSwitchToLogin: () => void;
@@ -41,7 +42,9 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 
 		try {
 			await signup(email, password, name);
+			toast.success("Account created successfully");
 		} catch (err) {
+			console.log(err);
 			setError("Failed to create account");
 		} finally {
 			setIsLoading(false);
@@ -157,7 +160,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 				<button
 					type="button"
 					onClick={onSwitchToLogin}
-					className="text-primary hover:text-accent font-medium transition-colors duration-300"
+					className="text-primary cursor-pointer underline hover:text-accent font-medium transition-colors duration-300"
 				>
 					Sign in
 				</button>

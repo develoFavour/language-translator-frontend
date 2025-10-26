@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Send, Mic, Copy, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import { api, ApiConversation, ApiMessage } from "@/lib/api-client";
+import { api, type ApiConversation, type ApiMessage } from "@/lib/api-client";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useSearchParams } from "next/navigation";
@@ -39,7 +39,6 @@ export default function ChatPage() {
 	const [isListening, setIsListening] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	// Minimal SpeechRecognition types for TS without lib.dom extras
 	type SpeechRecognitionType = {
 		start: () => void;
 		stop: () => void;
@@ -62,11 +61,9 @@ export default function ChatPage() {
 		scrollToBottom();
 	}, [messages]);
 
-	// Load conversation when ?id= changes
 	useEffect(() => {
 		const id = convId;
 		if (!id) {
-			// Reset to new chat state
 			setCurrentConversation(null);
 			setMessages([]);
 			return;
@@ -76,7 +73,6 @@ export default function ChatPage() {
 			try {
 				const res = await api.chat.getConversation(id);
 				const raw: ApiConversation = res.conversation;
-				// Map backend conversation to local state
 				const conv: Conversation = {
 					id: (raw.id ?? raw._id ?? id) as string,
 					title: raw.title || "Untitled",
@@ -98,7 +94,6 @@ export default function ChatPage() {
 				}
 			} catch (err) {
 				console.debug("Failed to load conversation", id, err);
-				// If fetch fails (e.g., not found), reset to new chat
 				if (mounted) {
 					setCurrentConversation(null);
 					setMessages([]);
@@ -221,17 +216,17 @@ export default function ChatPage() {
 
 	return (
 		<div className="flex flex-col h-full bg-black">
-			<div className="flex-1 overflow-y-auto p-6 space-y-4">
+			<div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-4">
 				{messages.length === 0 && (
 					<div className="flex items-center justify-center h-full">
-						<div className="text-center">
-							<div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-slate-700 flex items-center justify-center">
-								<span className="text-2xl">💬</span>
+						<div className="text-center px-4">
+							<div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full border-2 border-slate-700 flex items-center justify-center">
+								<span className="text-xl sm:text-2xl">💬</span>
 							</div>
-							<h2 className="text-xl font-semibold text-white mb-2">
+							<h2 className="text-lg sm:text-xl font-semibold text-white mb-2">
 								Start a Conversation
 							</h2>
-							<p className="text-slate-400">
+							<p className="text-sm sm:text-base text-slate-400">
 								Type a message or use voice input to begin
 							</p>
 						</div>
@@ -247,7 +242,7 @@ export default function ChatPage() {
 						style={{ animationDelay: `${index * 50}ms` }}
 					>
 						<div
-							className={`max-w-2xl px-4 py-3 rounded-lg ${
+							className={`max-w-xs sm:max-w-sm md:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-sm sm:text-base ${
 								message.role === "user"
 									? "bg-white text-black rounded-br-none"
 									: "bg-slate-900 text-white rounded-bl-none border border-slate-700"
@@ -260,13 +255,13 @@ export default function ChatPage() {
 										components={{
 											p: ({ node, ...props }) => (
 												<p
-													className="text-sm leading-relaxed mb-2 text-white"
+													className="text-xs sm:text-sm leading-relaxed mb-2 text-white"
 													{...props}
 												/>
 											),
 											table: ({ node, ...props }) => (
 												<table
-													className="text-xs border-collapse border border-slate-600 my-2"
+													className="text-xs border-collapse border border-slate-600 my-2 overflow-x-auto"
 													{...props}
 												/>
 											),
@@ -284,18 +279,21 @@ export default function ChatPage() {
 											),
 											ul: ({ node, ...props }) => (
 												<ul
-													className="list-disc list-inside text-sm mb-2 text-white"
+													className="list-disc list-inside text-xs sm:text-sm mb-2 text-white"
 													{...props}
 												/>
 											),
 											ol: ({ node, ...props }) => (
 												<ol
-													className="list-decimal list-inside text-sm mb-2 text-white"
+													className="list-decimal list-inside text-xs sm:text-sm mb-2 text-white"
 													{...props}
 												/>
 											),
 											li: ({ node, ...props }) => (
-												<li className="text-sm mb-1 text-white" {...props} />
+												<li
+													className="text-xs sm:text-sm mb-1 text-white"
+													{...props}
+												/>
 											),
 											strong: ({ node, ...props }) => (
 												<strong
@@ -308,19 +306,19 @@ export default function ChatPage() {
 											),
 											h1: ({ node, ...props }) => (
 												<h1
-													className="text-lg font-bold mb-2 text-white"
+													className="text-base sm:text-lg font-bold mb-2 text-white"
 													{...props}
 												/>
 											),
 											h2: ({ node, ...props }) => (
 												<h2
-													className="text-base font-bold mb-2 text-white"
+													className="text-sm sm:text-base font-bold mb-2 text-white"
 													{...props}
 												/>
 											),
 											h3: ({ node, ...props }) => (
 												<h3
-													className="text-sm font-bold mb-1 text-white"
+													className="text-xs sm:text-sm font-bold mb-1 text-white"
 													{...props}
 												/>
 											),
@@ -336,7 +334,9 @@ export default function ChatPage() {
 									</ReactMarkdown>
 								</div>
 							) : (
-								<p className="text-sm leading-relaxed">{message.content}</p>
+								<p className="text-xs sm:text-sm leading-relaxed">
+									{message.content}
+								</p>
 							)}
 
 							{message.role === "assistant" && (
@@ -359,23 +359,25 @@ export default function ChatPage() {
 
 				{loading && (
 					<div className="flex justify-start">
-						<div className="bg-slate-900 text-white px-4 py-3 rounded-lg border border-slate-700 flex items-center gap-2">
+						<div className="bg-slate-900 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-slate-700 flex items-center gap-2 text-sm">
 							<Loader2 size={16} className="animate-spin text-slate-400" />
-							<span className="text-sm">Thinking...</span>
+							<span>Thinking...</span>
 						</div>
 					</div>
 				)}
 				<div ref={messagesEndRef} />
 			</div>
 
-			<div className="border-t border-slate-800 bg-black p-6">
+			<div className="border-t border-slate-800 bg-black p-3 sm:p-4 md:p-6">
 				<div className="max-w-4xl mx-auto space-y-3">
-					<div className="flex items-center gap-2">
-						<label className="text-sm text-slate-400">Response Language:</label>
+					<div className="flex flex-col sm:flex-row sm:items-center gap-2">
+						<label className="text-xs sm:text-sm text-slate-400 whitespace-nowrap">
+							Response Language:
+						</label>
 						<select
 							value={selectedLanguage}
 							onChange={(e) => setSelectedLanguage(e.target.value)}
-							className="px-3 py-1.5 rounded-lg bg-black border border-white text-white text-sm focus:outline-none focus:border-slate-500 transition-colors duration-200"
+							className="px-3 py-1.5 rounded-lg bg-black border border-white text-white text-xs sm:text-sm focus:outline-none focus:border-slate-500 transition-colors duration-200"
 						>
 							<option value="en">English</option>
 							<option value="yo">Yoruba</option>
@@ -384,7 +386,7 @@ export default function ChatPage() {
 						</select>
 					</div>
 
-					<div className="flex items-end gap-3">
+					<div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-3">
 						<div className="flex-1 relative">
 							<textarea
 								value={input}
@@ -396,35 +398,35 @@ export default function ChatPage() {
 									}
 								}}
 								placeholder="Type your message or click the mic to speak..."
-								className="w-full px-4 py-3 rounded-lg bg-black border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 focus:bg-slate-900 transition-all duration-200 resize-none"
+								className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-black border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-slate-500 focus:bg-slate-900 transition-all duration-200 resize-none"
 								rows={3}
 							/>
 						</div>
 
-						<div className="flex gap-2">
+						<div className="flex gap-2 w-full sm:w-auto">
 							<button
 								onClick={startListening}
 								disabled={isListening || loading}
-								className={`p-3 rounded-lg transition-all duration-200 ${
+								className={`flex-1 sm:flex-none p-2.5 sm:p-3 rounded-lg transition-all duration-200 ${
 									isListening
 										? "bg-red-600 text-white"
 										: "bg-slate-800 text-slate-300 hover:bg-slate-700"
 								}`}
 								title="Voice input"
 							>
-								<Mic size={20} />
+								<Mic size={18} className="mx-auto" />
 							</button>
 
 							<button
 								onClick={handleSendMessage}
 								disabled={!input.trim() || loading}
-								className="p-3 rounded-lg bg-white text-black hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
+								className="flex-1 sm:flex-none p-2.5 sm:p-3 rounded-lg bg-white text-black hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
 								title="Send message"
 							>
 								{loading ? (
-									<Loader2 size={20} className="animate-spin" />
+									<Loader2 size={18} className="animate-spin mx-auto" />
 								) : (
-									<Send size={20} />
+									<Send size={18} className="mx-auto" />
 								)}
 							</button>
 						</div>

@@ -94,8 +94,8 @@ export function FeedbackModal({
 									<Star
 										className={`h-8 w-8 transition-all duration-200 ${
 											star <= (hoveredRating || rating)
-												? "fill-primary text-primary scale-110"
-												: "text-muted-foreground hover:text-primary/50"
+												? "fill-rose-500 text-rose-500 scale-110"
+												: "text-muted-foreground hover:text-rose-400"
 										}`}
 									/>
 								</button>
@@ -128,7 +128,7 @@ export function FeedbackModal({
 						<Button
 							onClick={handleSubmit}
 							disabled={rating === 0}
-							className="flex-1 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+							className="flex-1 bg-gradient-to-r border-2 border-white from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
 						>
 							Submit Feedback
 						</Button>

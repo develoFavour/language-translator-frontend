@@ -234,7 +234,7 @@ export function TranslateForm({
 				onClick={handleTranslate}
 				disabled={!sourceText.trim() || isTranslating}
 				size="lg"
-				className="w-full text-lg h-14 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+				className="w-full border border-white cursor-pointer text-lg  h-14 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
 			>
 				{isTranslating ? (
 					<>
