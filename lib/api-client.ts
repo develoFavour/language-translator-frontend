@@ -66,6 +66,21 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 	const data = await response.json();
 
 	if (!response.ok) {
+		// Handle unauthorized globally
+		if (response.status === 401 || response.status === 403) {
+			try {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+				// clear role cookie for middleware
+				if (typeof document !== "undefined") {
+					document.cookie = "role=; path=/; max-age=0; sameSite=Lax";
+				}
+				if (typeof window !== "undefined") {
+					// Redirect to home
+					window.location.href = "/";
+				}
+			} catch {}
+		}
 		throw new APIError(data.error || "An error occurred", response.status);
 	}
 
@@ -199,12 +214,84 @@ export const api = {
 			return fetchAPI("/admin/stats");
 		},
 
-		getAllFeedbacks: async () => {
-			return fetchAPI("/admin/feedbacks");
+		getAllFeedbacks: async (params?: {
+			page?: number;
+			limit?: number;
+			from?: string;
+			to?: string;
+		}) => {
+			let qs = "";
+			if (params) {
+				const sp = new URLSearchParams();
+				if (params.page) sp.set("page", String(params.page));
+				if (params.limit) sp.set("limit", String(params.limit));
+				if (params.from) sp.set("from", params.from);
+				if (params.to) sp.set("to", params.to);
+				qs = `?${sp.toString()}`;
+			}
+			return fetchAPI(`/admin/feedbacks${qs}`);
 		},
 
-		getAllUsers: async () => {
-			return fetchAPI("/admin/users");
+		getAllUsers: async (params?: {
+			page?: number;
+			limit?: number;
+			q?: string;
+		}) => {
+			let qs = "";
+			if (params) {
+				const sp = new URLSearchParams();
+				if (params.page) sp.set("page", String(params.page));
+				if (params.limit) sp.set("limit", String(params.limit));
+				if (params.q) sp.set("q", params.q);
+				qs = `?${sp.toString()}`;
+			}
+			return fetchAPI(`/admin/users${qs}`);
+		},
+
+		getTranslationByLanguage: async (params?: { range?: string }) => {
+			const qs = params?.range
+				? `?range=${encodeURIComponent(params.range)}`
+				: "";
+			return fetchAPI(`/admin/metrics/translation-by-language${qs}`);
+		},
+
+		metrics: {
+			getUserGrowth: async (params?: { range?: string }) => {
+				const qs = params?.range
+					? `?range=${encodeURIComponent(params.range)}`
+					: "";
+				return fetchAPI(`/admin/metrics/user-growth${qs}`);
+			},
+			getTranslationVolume: async (params?: { range?: string }) => {
+				const qs = params?.range
+					? `?range=${encodeURIComponent(params.range)}`
+					: "";
+				return fetchAPI(`/admin/metrics/translation-volume${qs}`);
+			},
+			getFeedbackDistribution: async (params?: { range?: string }) => {
+				const qs = params?.range
+					? `?range=${encodeURIComponent(params.range)}`
+					: "";
+				return fetchAPI(`/admin/metrics/feedback-distribution${qs}`);
+			},
+			// Note: language breakdown endpoint
+			getTranslationByLanguage: async (params?: { range?: string }) => {
+				const qs = params?.range
+					? `?range=${encodeURIComponent(params.range)}`
+					: "";
+				return fetchAPI(`/admin/metrics/translation-by-language${qs}`);
+			},
+		},
+
+		// Flat aliases to avoid nested property TS issues in consumers
+		getUserGrowth: async (params?: { range?: string }) => {
+			return api.admin.metrics.getUserGrowth(params);
+		},
+		getTranslationVolume: async (params?: { range?: string }) => {
+			return api.admin.metrics.getTranslationVolume(params);
+		},
+		getFeedbackDistribution: async (params?: { range?: string }) => {
+			return api.admin.metrics.getFeedbackDistribution(params);
 		},
 	},
 };

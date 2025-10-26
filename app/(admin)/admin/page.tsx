@@ -11,31 +11,42 @@ import { api } from "@/lib/api-client";
 export default function AdminDashboard() {
 	const [stats, setStats] = useState({
 		totalUsers: 0,
-		activeUsers: 0, // not provided by backend yet
+		activeUsers: 0,
 		totalTranslations: 0,
-		avgFeedbackRating: 0, // not provided by backend yet
+		avgFeedbackRating: 0,
 	});
 
 	const [loading, setLoading] = useState(false);
+	const [userGrowth, setUserGrowth] = useState<{ date: string; count: number }[]>([]);
+	const [translationLanguages, setTranslationLanguages] = useState<{ language: string; count: number }[]>([]);
+	const [feedbackDist, setFeedbackDist] = useState<{ rating: number; count: number }[]>([]);
 
 	useEffect(() => {
-		const fetchStats = async () => {
+		const fetchAll = async () => {
 			setLoading(true);
 			try {
-				const data = await api.admin.getStats();
-				// backend returns { stats: { totalUsers, totalTranslations, totalConversations, totalFeedbacks } }
-				setStats((prev) => ({
-					...prev,
-					totalUsers: data.stats?.totalUsers ?? 0,
-					totalTranslations: data.stats?.totalTranslations ?? 0,
-				}));
+				const [statsRes, growthRes, langsRes, distRes] = await Promise.all([
+					api.admin.getStats(),
+					api.admin.getUserGrowth({ range: "30d" }),
+					api.admin.getTranslationByLanguage({ range: "30d" }),
+					api.admin.getFeedbackDistribution({ range: "90d" }),
+				]);
+				setStats({
+					totalUsers: statsRes.stats?.totalUsers ?? 0,
+					activeUsers: statsRes.stats?.activeUsers ?? 0,
+					totalTranslations: statsRes.stats?.totalTranslations ?? 0,
+					avgFeedbackRating: statsRes.stats?.avgFeedbackRating ?? 0,
+				});
+				setUserGrowth(growthRes.series ?? []);
+				setTranslationLanguages(langsRes.languages ?? []);
+				setFeedbackDist(distRes.distribution ?? []);
 			} catch (e) {
-				console.error("Error fetching admin stats", e);
+				console.error("Error fetching admin metrics", e);
 			} finally {
 				setLoading(false);
 			}
 		};
-		fetchStats();
+		fetchAll();
 	}, []);
 
 	return (
@@ -83,13 +94,13 @@ export default function AdminDashboard() {
 
 				{/* Charts Grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-4 duration-500 delay-200">
-					<UserGrowthChart />
-					<TranslationVolumeChart />
+					<UserGrowthChart data={userGrowth} />
+					<TranslationVolumeChart languages={translationLanguages} />
 				</div>
 
 				{/* Feedback Ratings */}
 				<div className="animate-in fade-in slide-in-from-top-4 duration-500 delay-300">
-					<FeedbackRatingsChart />
+					<FeedbackRatingsChart distribution={feedbackDist} />
 				</div>
 			</div>
 		</div>
