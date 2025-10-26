@@ -17,15 +17,7 @@ export interface Translation {
 	sourceLang: string;
 	targetLang: string;
 	timestamp: Date;
-}
-
-interface TranslationDTO {
-	id: string | number;
-	sourceText: string;
-	translatedText: string;
-	sourceLang: string;
-	targetLang: string;
-	createdAt: string;
+	createdAt: Date;
 }
 
 export interface Feedback {
@@ -50,7 +42,6 @@ export default function Home() {
 		useState<Translation | null>(null);
 	const [showUserMenu, setShowUserMenu] = useState(false);
 	const [loadingHistory, setLoadingHistory] = useState(false);
-	console.log(currentTranslation);
 
 	useEffect(() => {
 		if (user) {
@@ -61,17 +52,15 @@ export default function Home() {
 	const loadTranslationHistory = async () => {
 		setLoadingHistory(true);
 		try {
-			const response = (await api.translations.getHistory()) as {
-				translations?: TranslationDTO[];
-			};
+			const response = await api.translations.getHistory();
 			const historyTranslations: Translation[] =
-				(response?.translations ?? []).map((t) => ({
+				response?.translations?.map((t: Translation) => ({
 					id: String(t.id),
-					sourceText: t.sourceText,
-					translatedText: t.translatedText,
-					sourceLang: t.sourceLang,
-					targetLang: t.targetLang,
-					timestamp: new Date(t.createdAt),
+					sourceText: String(t.sourceText),
+					translatedText: String(t.translatedText),
+					sourceLang: String(t.sourceLang),
+					targetLang: String(t.targetLang),
+					timestamp: new Date(String(t.createdAt)),
 				})) || [];
 			setTranslations(historyTranslations);
 		} catch (err) {
@@ -270,14 +259,22 @@ export default function Home() {
 
 						<div className="glass-card rounded-2xl p-8 hover:border-primary/50 transition-all hover:glow-primary hover:-translate-y-2 duration-500 group animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
 							<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-								<span className="text-3xl">💬</span>
+								<span className="text-3xl">🤖</span>
 							</div>
 							<h3 className="font-bold text-xl mb-3 text-gradient">
-								Community Feedback
+								AI Chat Assistant
 							</h3>
-							<p className="text-sm text-muted-foreground leading-relaxed">
-								Help improve translations with your suggestions and ratings
+							<p className="text-sm text-muted-foreground leading-relaxed mb-4">
+								Chat with our AI in your native language. Get instant answers
+								and support in Yoruba, Igbo, Hausa, and English.
 							</p>
+							<a
+								href="/chat"
+								className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
+							>
+								Start Chatting
+								<span>→</span>
+							</a>
 						</div>
 					</div>
 				</div>
