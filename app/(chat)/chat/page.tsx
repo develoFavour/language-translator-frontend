@@ -5,6 +5,7 @@ import { Send, Mic, Copy, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { api, ApiConversation, ApiMessage } from "@/lib/api-client";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
@@ -255,6 +256,7 @@ export default function ChatPage() {
 							{message.role === "assistant" ? (
 								<div className="prose prose-sm prose-invert max-w-none">
 									<ReactMarkdown
+										remarkPlugins={[remarkGfm]}
 										components={{
 											p: ({ node, ...props }) => (
 												<p
