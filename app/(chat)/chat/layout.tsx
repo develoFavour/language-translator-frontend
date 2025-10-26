@@ -30,15 +30,26 @@ export default function ChatLayout({
 				setLoading(true);
 				setError(null);
 				const res = await api.chat.getConversations();
-				const items: Array<{ id: string; title: string; date: string }> = (
-					res.conversations || []
-				).map((c: ApiConversation, idx) => ({
-					id: (c.id ?? c._id ?? `${Date.now()}_${idx}`) as string,
-					title: c.title || "Untitled",
-					date: new Date(
-						(c.updatedAt ?? c.created_at ?? c.createdAt) as string
-					).toLocaleDateString(),
-				}));
+				const sorted = [...(res.conversations || [])].sort(
+					(a: ApiConversation, b: ApiConversation) => {
+						const tb = new Date(
+							((b.updatedAt || b.updated_at || b.createdAt || b.created_at) as string) || ""
+						).getTime();
+						const ta = new Date(
+							((a.updatedAt || a.updated_at || a.createdAt || a.created_at) as string) || ""
+						).getTime();
+						return tb - ta; // newest first
+					}
+				);
+				const items: Array<{ id: string; title: string; date: string }> = sorted.map(
+					(c: ApiConversation, idx) => ({
+						id: (c.id ?? c._id ?? `${Date.now()}_${idx}`) as string,
+						title: c.title || "Untitled",
+						date: new Date(
+							((c.updatedAt || c.updated_at || c.createdAt || c.created_at) as string) || Date.now()
+						).toLocaleString(),
+					})
+				);
 				if (mounted) setConversations(items);
 			} catch (e) {
 				if (mounted) setError("Failed to load conversations");
