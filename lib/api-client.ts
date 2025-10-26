@@ -164,6 +164,32 @@ export const api = {
 		},
 	},
 
+	// Text-to-Speech endpoint (returns binary audio)
+	tts: {
+		speak: async (text: string, lang: string): Promise<Blob> => {
+			const token = localStorage.getItem("token");
+			const res = await fetch(`${API_BASE_URL}/tts`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					...(token ? { Authorization: `Bearer ${token}` } : {}),
+				},
+				body: JSON.stringify({ text, lang }),
+			});
+			if (!res.ok) {
+				let message = "TTS request failed";
+				try {
+					const err = await res.json();
+					message = err.error || message;
+				} catch {
+					// ignore JSON parse error for non-JSON responses
+				}
+				throw new APIError(message, res.status);
+			}
+			return await res.blob();
+		},
+	},
+
 	admin: {
 		getStats: async () => {
 			return fetchAPI("/admin/stats");

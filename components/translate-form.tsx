@@ -98,6 +98,7 @@ export function TranslateForm({
 				sourceLang: response.translation.sourceLang,
 				targetLang: response.translation.targetLang,
 				timestamp: new Date(response.translation.createdAt),
+				createdAt: new Date(response.translation.createdAt),
 			};
 			setTranslatedText(translation.translatedText);
 			setCurrentTranslation(translation);
