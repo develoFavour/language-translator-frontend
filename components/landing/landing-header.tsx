@@ -88,7 +88,7 @@ export function LandingHeader() {
 
 				{/* Mobile Menu */}
 				{isMobileMenuOpen && (
-					<div className="md:hidden py-4 border-t border-white/10 animate-in slide-in-from-top-2 duration-200">
+					<div className="md:hidden py-4 border-t bg-black/30 backdrop-blur-xl border-white/10 animate-in slide-in-from-top-2 duration-200">
 						<nav className="flex flex-col gap-4">
 							{navItems.map((item) => (
 								<a
