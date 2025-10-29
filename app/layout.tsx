@@ -10,7 +10,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-	title: "LinguaBridge - Multilingual Campus Translator",
+	title: "Campuslingo - Multilingual Campus Translator",
 	description:
 		"Bridge languages, connect cultures. Translate between Yoruba, Igbo, Hausa, and more.",
 	generator: "v0.app",

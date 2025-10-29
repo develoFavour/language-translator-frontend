@@ -70,7 +70,7 @@ export default function AdminLayout({
 				{/* Logo */}
 				<div className="p-6 border-b border-slate-800">
 					<h2 className="text-xl font-bold text-white">Admin Panel</h2>
-					<p className="text-xs text-slate-500 mt-1">LinguaBridge</p>
+					<p className="text-xs text-slate-500 mt-1">Campuslingo</p>
 				</div>
 
 				{/* Navigation */}

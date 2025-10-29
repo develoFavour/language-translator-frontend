@@ -135,7 +135,7 @@ export default function Home() {
 							</span>
 						</div>
 						<div className="group-hover:translate-x-1 transition-transform duration-300">
-							<h1 className="text-xl font-bold text-gradient">LinguaBridge</h1>
+							<h1 className="text-xl font-bold text-gradient">Campuslingo</h1>
 							<p className="text-xs text-muted-foreground">
 								Multilingual Campus Translator
 							</p>

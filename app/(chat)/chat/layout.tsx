@@ -178,7 +178,7 @@ export default function ChatLayout({
 						)}
 					</button>
 					<h1 className="text-lg md:text-xl font-semibold text-white flex-1 text-center">
-						LinguaBridge AI
+						Campuslingo AI
 					</h1>
 					<Link
 						href="/"

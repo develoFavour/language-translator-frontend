@@ -20,7 +20,12 @@ export default function UserGrowthChart({ data }: { data: Point[] }) {
 				<LineChart data={data}>
 					<CartesianGrid strokeDasharray="3 3" stroke="#334155" />
 					<XAxis dataKey="date" stroke="#94a3b8" />
-					<YAxis stroke="#94a3b8" />
+					<YAxis
+						stroke="#94a3b8"
+						domain={[0, 20]}
+						allowDecimals={false}
+						ticks={[0, 5, 10, 15, 20]}
+					/>
 					<Tooltip
 						contentStyle={{
 							backgroundColor: "#1e293b",

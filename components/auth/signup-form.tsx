@@ -56,7 +56,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 			<div className="space-y-2 text-center">
 				<h2 className="text-2xl font-bold text-gradient">Create Account</h2>
 				<p className="text-muted-foreground text-sm">
-					Join LinguaBridge to save your translations
+					Join Campuslingo to save your translations
 				</p>
 			</div>
 
