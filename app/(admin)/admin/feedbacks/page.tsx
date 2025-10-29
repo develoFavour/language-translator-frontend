@@ -112,16 +112,16 @@ export default function AdminFeedbacksPage() {
 									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
 										Rating
 									</th>
-									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:table-cell">
+									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
 										Suggested
 									</th>
-									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden md:table-cell">
+									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
 										Source
 									</th>
-									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden md:table-cell">
+									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
 										Translated
 									</th>
-									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden lg:table-cell">
+									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
 										User
 									</th>
 									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
@@ -140,16 +140,16 @@ export default function AdminFeedbacksPage() {
 											<td className="px-3 sm:px-4 py-3 text-slate-200 text-sm">
 												{f.rating}
 											</td>
-											<td className="px-3 sm:px-4 py-3 text-slate-300 max-w-[200px] sm:max-w-[360px] truncate hidden sm:table-cell text-sm">
+											<td className="px-3 sm:px-4 py-3 text-slate-300 max-w-[200px] sm:max-w-[360px] whitespace-pre-wrap break-words text-sm" title={f.suggestedText || ""}>
 												{f.suggestedText || "-"}
 											</td>
-											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden md:table-cell text-sm max-w-[260px] truncate" title={f.sourceText}>
+											<td className="px-3 sm:px-4 py-3 text-slate-400 text-sm max-w-[260px] md:max-w-[360px] whitespace-pre-wrap break-words" title={f.sourceText}>
 												{f.sourceText || ""}
 											</td>
-											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden md:table-cell text-sm max-w-[260px] truncate" title={f.translatedText}>
+											<td className="px-3 sm:px-4 py-3 text-slate-400 text-sm max-w-[260px] md:max-w-[360px] whitespace-pre-wrap break-words" title={f.translatedText}>
 												{f.translatedText || ""}
 											</td>
-											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden lg:table-cell text-sm">
+											<td className="px-3 sm:px-4 py-3 text-slate-400 text-sm">
 												{f.userName || f.userId || ""}
 											</td>
 											<td className="px-3 sm:px-4 py-3 text-slate-400 text-sm">
