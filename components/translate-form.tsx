@@ -15,6 +15,7 @@ import { ensureAudioUnlocked } from "@/lib/audio-unlock";
 interface TranslateFormProps {
 	onTranslate: (translation: Translation) => void;
 	onRequestFeedback: (translation: Translation) => void;
+	canRate?: boolean;
 }
 
 const LANGUAGES = Object.entries(LANGUAGE_CODES).map(([code, info]) => ({
@@ -27,6 +28,7 @@ const LANGUAGES = Object.entries(LANGUAGE_CODES).map(([code, info]) => ({
 export function TranslateForm({
 	onTranslate,
 	onRequestFeedback,
+	canRate = true,
 }: TranslateFormProps) {
 	const [sourceText, setSourceText] = useState("");
 	const [translatedText, setTranslatedText] = useState("");
@@ -52,6 +54,11 @@ export function TranslateForm({
 			zu: "zu-ZA",
 		};
 		return map[lang] || lang;
+	};
+
+	const isTtsEnabled = (langCode: string) => {
+		const disabled = new Set(["ig", "ar", "sw", "ha"]);
+		return !disabled.has(langCode.toLowerCase());
 	};
 
 	useEffect(() => {
@@ -141,10 +148,23 @@ export function TranslateForm({
 				const audio = new Audio(url);
 				// Ensure inline playback on mobile
 				audio.setAttribute("playsinline", "true");
-				audio.play().finally(() => URL.revokeObjectURL(url));
-				return;
+				try {
+					await audio.play();
+					return;
+				} catch (playErr) {
+					// If mobile blocks playback after async work, fall back below
+					console.warn(
+						"HTMLAudioElement.play() was blocked, falling back to browser TTS:",
+						playErr
+					);
+				} finally {
+					URL.revokeObjectURL(url);
+				}
 			} catch (e) {
-				console.warn("Backend TTS failed, falling back to browser TTS:", e);
+				console.warn(
+					"Backend TTS fetch failed, falling back to browser TTS:",
+					e
+				);
 			}
 			if ("speechSynthesis" in window) {
 				const synth = window.speechSynthesis;
@@ -216,6 +236,7 @@ export function TranslateForm({
 					onSpeak={handleSpeak}
 					speaking={speaking}
 					languages={LANGUAGES}
+					ttsEnabled={isTtsEnabled(sourceLang)}
 				/>
 				<TargetDisplay
 					targetLang={targetLang}
@@ -227,6 +248,8 @@ export function TranslateForm({
 					onRequestFeedback={onRequestFeedback}
 					speaking={speaking}
 					languages={LANGUAGES}
+					canRate={canRate}
+					ttsEnabled={isTtsEnabled(targetLang)}
 				/>
 			</div>
 

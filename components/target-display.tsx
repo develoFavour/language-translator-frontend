@@ -19,6 +19,8 @@ interface TargetDisplayProps {
 	onRequestFeedback: (translation: Translation) => void;
 	speaking: boolean;
 	languages: Language[];
+	ttsEnabled: boolean;
+	canRate?: boolean;
 }
 
 export function TargetDisplay({
@@ -31,6 +33,8 @@ export function TargetDisplay({
 	onRequestFeedback,
 	speaking,
 	languages,
+	ttsEnabled,
+	canRate = true,
 }: TargetDisplayProps) {
 	const currentLanguage = languages.find((l) => l.code === targetLang);
 
@@ -43,19 +47,21 @@ export function TargetDisplay({
 				</h3>
 				{translatedText && (
 					<div className="flex gap-2">
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={() => onSpeak(translatedText, targetLang)}
-							disabled={speaking}
-							className="hover:bg-accent/10 hover:text-accent transition-colors"
-						>
-							{speaking ? (
-								<Loader2 className="h-4 w-4 animate-spin" />
-							) : (
-								<Volume2 className="h-4 w-4" />
-							)}
-						</Button>
+						{ttsEnabled && (
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={() => onSpeak(translatedText, targetLang)}
+								disabled={speaking}
+								className="hover:bg-accent/10 hover:text-accent transition-colors"
+							>
+								{speaking ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<Volume2 className="h-4 w-4" />
+								)}
+							</Button>
+						)}
 						<Button
 							variant="ghost"
 							size="sm"
@@ -84,7 +90,7 @@ export function TargetDisplay({
 					</p>
 				)}
 			</div>
-			{translatedText && currentTranslation && (
+			{translatedText && currentTranslation && canRate && (
 				<Button
 					variant="outline"
 					size="sm"

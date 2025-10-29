@@ -13,6 +13,7 @@ import {
 	User,
 	Loader2,
 	LayoutDashboard,
+	Bot,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { api } from "@/lib/api-client";
@@ -153,6 +154,15 @@ export default function Home() {
 								<span className="text-sm font-medium">Admin</span>
 							</a>
 						)}
+						{/* AI Dashboard CTA */}
+						{/* <Link
+							href="/chat"
+							className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
+							aria-label="Go to AI Dashboard"
+						>
+							<Bot className="h-4 w-4" />
+							<span className="text-sm">Chat with Campuslingo AI</span>
+						</Link> */}
 						<Button
 							variant="outline"
 							size="icon"
@@ -258,6 +268,7 @@ export default function Home() {
 							onRequestFeedback={(translation) =>
 								setFeedbackTranslation(translation)
 							}
+							canRate={user?.role !== "admin"}
 						/>
 					</div>
 

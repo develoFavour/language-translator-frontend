@@ -2,6 +2,7 @@
 // This module must only be imported on the client.
 
 import { pipeline, env } from "@xenova/transformers";
+import { playBlobViaWebAudio } from "./audio-playback";
 
 // Ensure models are fetched remotely from Hugging Face, not via local /models path
 env.allowLocalModels = false;
@@ -80,13 +81,5 @@ export async function synthesizeYorubaToBlob(text: string): Promise<Blob> {
 
 export async function playYoruba(text: string): Promise<void> {
     const blob = await synthesizeYorubaToBlob(text);
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    try {
-        // Ensure inline playback on mobile (iOS Safari/Android Chrome)
-        audio.setAttribute("playsinline", "true");
-        await audio.play();
-    } finally {
-        audio.onended = () => URL.revokeObjectURL(url);
-    }
+    await playBlobViaWebAudio(blob);
 }

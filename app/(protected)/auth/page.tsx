@@ -11,7 +11,7 @@ export default function AuthPage() {
 
 	useEffect(() => {
 		if (user) {
-			router.push("/translate");
+			router.push("/");
 		}
 	}, [user, router]);
 

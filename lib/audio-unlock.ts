@@ -3,6 +3,7 @@
 
 let unlocked = false;
 let unlocking = false;
+let sharedCtx: AudioContext | null = null;
 
 type WindowWithWebkitAC = Window & {
   AudioContext?: typeof AudioContext;
@@ -14,41 +15,42 @@ export async function ensureAudioUnlocked(): Promise<void> {
   if (unlocked || unlocking) return;
   unlocking = true;
   try {
-    // Try to resume a Web Audio context (iOS Safari requirement)
     const win = window as WindowWithWebkitAC;
     const AC: typeof AudioContext | undefined = win.AudioContext || win.webkitAudioContext;
     if (AC) {
-      const ctx = new AC();
-      if (ctx.state === "suspended") {
-        try { await ctx.resume(); } catch { /* noop */ }
+      if (!sharedCtx) sharedCtx = new AC();
+      if (sharedCtx.state === "suspended") {
+        try { await sharedCtx.resume(); } catch { /* noop */ }
       }
-      // Create and play a short silent buffer to fully unlock
       try {
-        const buffer = ctx.createBuffer(1, 1, 22050);
-        const source = ctx.createBufferSource();
+        const buffer = sharedCtx.createBuffer(1, 1, 22050);
+        const source = sharedCtx.createBufferSource();
         source.buffer = buffer;
-        source.connect(ctx.destination);
+        source.connect(sharedCtx.destination);
         source.start(0);
       } catch { /* noop */ }
-      // Close if supported to avoid leaking contexts
-      try { await ctx.close(); } catch { /* noop */ }
     }
-
-    // Also try playing a silent HTMLAudioElement
     try {
       const a = new Audio();
       a.setAttribute("playsinline", "true");
       a.muted = true;
-      // Minimal WAV data URI header signifying (near) silence
       a.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAAAB3AQACABAAZGF0YQAAAAA=";
       await a.play().catch(() => { /* ignore */ });
       a.pause();
       a.removeAttribute("src");
       a.load();
     } catch { /* noop */ }
-
     unlocked = true;
   } finally {
     unlocking = false;
   }
+}
+
+export function getAudioContext(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  const win = window as WindowWithWebkitAC;
+  const AC: typeof AudioContext | undefined = win.AudioContext || win.webkitAudioContext;
+  if (!AC) return null;
+  if (!sharedCtx) sharedCtx = new AC();
+  return sharedCtx;
 }

@@ -50,7 +50,6 @@ export const LANGUAGE_CODES = {
 	ar: { name: "Arabic", flag: "🇸🇦", native: "العربية" },
 	pt: { name: "Portuguese", flag: "🇵🇹", native: "Português" },
 	sw: { name: "Swahili", flag: "🇰🇪", native: "Kiswahili" },
-	zu: { name: "Zulu", flag: "🇿🇦", native: "isiZulu" },
 };
 
 /**

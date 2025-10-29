@@ -18,6 +18,7 @@ interface SourceTextareaProps {
 	onSpeak: (text: string, lang: string) => void;
 	speaking: boolean;
 	languages: Language[];
+	ttsEnabled: boolean;
 }
 
 export function SourceTextarea({
@@ -27,6 +28,7 @@ export function SourceTextarea({
 	onSpeak,
 	speaking,
 	languages,
+	ttsEnabled,
 }: SourceTextareaProps) {
 	const currentLanguage = languages.find((l) => l.code === sourceLang);
 
@@ -37,7 +39,7 @@ export function SourceTextarea({
 					<span className="text-lg">{currentLanguage?.flag}</span>
 					{currentLanguage?.name}
 				</h3>
-				{sourceText && (
+				{sourceText && ttsEnabled && (
 					<Button
 						variant="ghost"
 						size="sm"

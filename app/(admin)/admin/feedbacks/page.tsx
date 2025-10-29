@@ -11,6 +11,9 @@ type Feedback = {
 	rating: number;
 	suggestedText?: string;
 	createdAt?: string;
+	userName?: string;
+	sourceText?: string;
+	translatedText?: string;
 };
 
 export default function AdminFeedbacksPage() {
@@ -57,6 +60,7 @@ export default function AdminFeedbacksPage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	console.log("Feedback", items);
 	return (
 		<div className="p-4 sm:p-6 md:p-8 bg-black min-h-full">
 			<div className="max-w-7xl mx-auto space-y-6">
@@ -112,7 +116,10 @@ export default function AdminFeedbacksPage() {
 										Suggested
 									</th>
 									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden md:table-cell">
-										Translation
+										Source
+									</th>
+									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden md:table-cell">
+										Translated
 									</th>
 									<th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider hidden lg:table-cell">
 										User
@@ -136,11 +143,14 @@ export default function AdminFeedbacksPage() {
 											<td className="px-3 sm:px-4 py-3 text-slate-300 max-w-[200px] sm:max-w-[360px] truncate hidden sm:table-cell text-sm">
 												{f.suggestedText || "-"}
 											</td>
-											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden md:table-cell text-sm">
-												{f.translationId || ""}
+											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden md:table-cell text-sm max-w-[260px] truncate" title={f.sourceText}>
+												{f.sourceText || ""}
+											</td>
+											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden md:table-cell text-sm max-w-[260px] truncate" title={f.translatedText}>
+												{f.translatedText || ""}
 											</td>
 											<td className="px-3 sm:px-4 py-3 text-slate-400 hidden lg:table-cell text-sm">
-												{f.userId || ""}
+												{f.userName || f.userId || ""}
 											</td>
 											<td className="px-3 sm:px-4 py-3 text-slate-400 text-sm">
 												{created}
