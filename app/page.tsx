@@ -312,7 +312,7 @@ export default function Home() {
 							</p>
 							<Link
 								href="/chat"
-								className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
+								className="inline-flex border border-white items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
 							>
 								Start Chatting
 								<span>→</span>
