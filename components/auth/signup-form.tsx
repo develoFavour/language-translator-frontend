@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import { toast } from "sonner";
 
 interface SignupFormProps {
 	onSwitchToLogin: () => void;
@@ -42,9 +41,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 
 		try {
 			await signup(email, password, name);
-			toast.success("Account created successfully");
 		} catch (err) {
-			console.log(err);
 			setError("Failed to create account");
 		} finally {
 			setIsLoading(false);
@@ -56,13 +53,13 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 			<div className="space-y-2 text-center">
 				<h2 className="text-2xl font-bold text-gradient">Create Account</h2>
 				<p className="text-muted-foreground text-sm">
-					Join Campuslingo to save your translations
+					Join LinguaBridge to save your translations
 				</p>
 			</div>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div className="space-y-2 animate-in fade-in duration-500 delay-100">
-					<Label htmlFor="name" className="text-sm font-medium">
+					<Label htmlFor="name" className="text-sm font-medium text-foreground">
 						Full Name
 					</Label>
 					<div className="relative group">
@@ -73,14 +70,17 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 							placeholder="John Doe"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>
 				</div>
 
 				<div className="space-y-2 animate-in fade-in duration-500 delay-200">
-					<Label htmlFor="email" className="text-sm font-medium">
+					<Label
+						htmlFor="email"
+						className="text-sm font-medium text-foreground"
+					>
 						Email
 					</Label>
 					<div className="relative group">
@@ -91,14 +91,17 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 							placeholder="you@example.com"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>
 				</div>
 
 				<div className="space-y-2 animate-in fade-in duration-500 delay-300">
-					<Label htmlFor="password" className="text-sm font-medium">
+					<Label
+						htmlFor="password"
+						className="text-sm font-medium text-foreground"
+					>
 						Password
 					</Label>
 					<div className="relative group">
@@ -109,14 +112,17 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 							placeholder="••••••••"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>
 				</div>
 
 				<div className="space-y-2 animate-in fade-in duration-500 delay-400">
-					<Label htmlFor="confirm-password" className="text-sm font-medium">
+					<Label
+						htmlFor="confirm-password"
+						className="text-sm font-medium text-foreground"
+					>
 						Confirm Password
 					</Label>
 					<div className="relative group">
@@ -127,7 +133,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 							placeholder="••••••••"
 							value={confirmPassword}
 							onChange={(e) => setConfirmPassword(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>
@@ -141,7 +147,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 
 				<Button
 					type="submit"
-					className="w-full mt-6 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+					className="w-full mt-6 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 border border-white cursor-pointer"
 					disabled={isLoading}
 				>
 					{isLoading ? (
@@ -160,7 +166,7 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 				<button
 					type="button"
 					onClick={onSwitchToLogin}
-					className="text-primary cursor-pointer underline hover:text-accent font-medium transition-colors duration-300"
+					className="text-primary underline cursor-pointer hover:text-accent font-medium transition-colors duration-300"
 				>
 					Sign in
 				</button>

@@ -39,7 +39,7 @@ export function TargetDisplay({
 	const currentLanguage = languages.find((l) => l.code === targetLang);
 
 	return (
-		<Card className="p-6 space-y-4 bg-gradient-to-br from-muted/30 to-muted/10 hover:shadow-lg transition-all duration-300 border-border/50">
+		<Card className="p-6 space-y-4 bg-gradient-to-br from-muted/30 to-muted/10 hover:shadow-lg transition-all duration-300 border-border/50 ">
 			<div className="flex items-center justify-between">
 				<h3 className="font-semibold text-sm text-muted-foreground flex items-center gap-2">
 					<span className="text-lg">{currentLanguage?.flag}</span>
@@ -84,7 +84,7 @@ export function TargetDisplay({
 						{translatedText}
 					</p>
 				) : (
-					<p className="text-muted-foreground flex items-center gap-2">
+					<p className="text-gray-500 flex items-center gap-2">
 						<Sparkles className="h-4 w-4" />
 						Translation will appear here...
 					</p>

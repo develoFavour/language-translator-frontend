@@ -33,7 +33,7 @@ export function SourceTextarea({
 	const currentLanguage = languages.find((l) => l.code === sourceLang);
 
 	return (
-		<Card className="p-6 space-y-4 hover:shadow-lg transition-shadow duration-300 border-border/50">
+		<Card className="p-6 space-y-4 hover:shadow-lg transition-shadow duration-300 border-border/20">
 			<div className="flex items-center justify-between">
 				<h3 className="font-semibold text-sm text-muted-foreground flex items-center gap-2">
 					<span className="text-lg">{currentLanguage?.flag}</span>
@@ -59,7 +59,7 @@ export function SourceTextarea({
 				value={sourceText}
 				onChange={(e) => onTextChange(e.target.value)}
 				placeholder="Enter text to translate..."
-				className="min-h-[200px] resize-none border-0 focus-visible:ring-0 p-0 text-lg"
+				className="min-h-[200px] resize-none border-0 focus-visible:ring-0 text-lg p-6"
 			/>
 			<div className="flex items-center justify-between text-xs text-muted-foreground">
 				<span>{sourceText.length} characters</span>

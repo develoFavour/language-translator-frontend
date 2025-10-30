@@ -48,10 +48,6 @@ export function TranslateForm({
 			ig: "ig-NG",
 			ha: "ha-NG",
 			en: "en-NG",
-			fr: "fr-FR",
-			es: "es-ES",
-			sw: "sw-TZ",
-			zu: "zu-ZA",
 		};
 		return map[lang] || lang;
 	};

@@ -60,7 +60,7 @@ export function LoginForm({ onSwitchToSignup }: LoginFormProps) {
 							placeholder="you@example.com"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>
@@ -78,7 +78,7 @@ export function LoginForm({ onSwitchToSignup }: LoginFormProps) {
 							placeholder="••••••••"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary"
+							className="pl-10 bg-card/50 border-border/50 hover:border-border transition-colors duration-300 focus:border-primary focus:placeholder-transparent"
 							required
 						/>
 					</div>

@@ -381,3 +381,30 @@ html {
 .hover-lift:hover {
 	animation: hover-lift 0.3s ease-out forwards;
 }
+
+/* Explicit input placeholder styling to make them subtle and not bold */
+input::placeholder,
+textarea::placeholder {
+	color: hsl(var(--muted-foreground) / 0.4);
+	font-weight: 400;
+	opacity: 1;
+}
+
+/* Ensure input text is clearly visible and different from placeholder */
+input,
+textarea {
+	font-weight: 400;
+	color: hsl(var(--foreground));
+}
+
+/* Add better focus states with visual feedback */
+input:focus,
+textarea:focus {
+	background-color: hsl(var(--card) / 0.5);
+}
+
+/* Ensure placeholder is even more subtle on dark backgrounds */
+.dark input::placeholder,
+.dark textarea::placeholder {
+	color: hsl(var(--muted-foreground) / 0.35);
+}

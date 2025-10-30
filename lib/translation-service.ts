@@ -45,11 +45,6 @@ export const LANGUAGE_CODES = {
 	yo: { name: "Yoruba", flag: "🇳🇬", native: "Yorùbá" },
 	ig: { name: "Igbo", flag: "🇳🇬", native: "Igbo" },
 	ha: { name: "Hausa", flag: "🇳🇬", native: "Hausa" },
-	fr: { name: "French", flag: "🇫🇷", native: "Français" },
-	es: { name: "Spanish", flag: "🇪🇸", native: "Español" },
-	ar: { name: "Arabic", flag: "🇸🇦", native: "العربية" },
-	pt: { name: "Portuguese", flag: "🇵🇹", native: "Português" },
-	sw: { name: "Swahili", flag: "🇰🇪", native: "Kiswahili" },
 };
 
 /**
