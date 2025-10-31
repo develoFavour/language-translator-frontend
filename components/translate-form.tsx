@@ -53,7 +53,7 @@ export function TranslateForm({
 	};
 
 	const isTtsEnabled = (langCode: string) => {
-		const disabled = new Set(["ig", "ar", "sw", "ha"]);
+		const disabled = new Set(["ar", "sw"]);
 		return !disabled.has(langCode.toLowerCase());
 	};
 
@@ -137,6 +137,23 @@ export function TranslateForm({
 						e
 					);
 				}
+			}
+
+			// Prefer browser Web Speech API for Igbo and Hausa
+			if (base === "ig" || base === "ha") {
+				if ("speechSynthesis" in window) {
+					const synth = window.speechSynthesis;
+					const voice = selectVoiceForLang(voices, bcp);
+					const utterance = new SpeechSynthesisUtterance(text);
+					utterance.lang = bcp;
+					if (voice) utterance.voice = voice;
+					utterance.rate = 0.95;
+					utterance.pitch = 1.0;
+					synth.cancel();
+					synth.speak(utterance);
+					return;
+				}
+				// if speechSynthesis not available, fall through to backend TTS below
 			}
 			try {
 				const blob = await api.tts.speak(text, bcp);
