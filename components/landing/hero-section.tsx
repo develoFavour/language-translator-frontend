@@ -41,7 +41,7 @@ export function HeroSection() {
 			className="relative min-h-screen overflow-hidden px-4 md:px-6 pt-20 md:pt-24"
 		>
 			<Image
-				src="/hallmark_university_nigeria_cover.jfif"
+				src="/hallmark-univeristy.jpg"
 				alt="Hallmark University campus"
 				fill
 				priority
