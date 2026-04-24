@@ -5,8 +5,13 @@ import { pipeline, env } from "@xenova/transformers";
 import { playBlobViaWebAudio } from "./audio-playback";
 
 // Ensure models are fetched remotely from Hugging Face, not via local /models path
-env.allowLocalModels = false;
-env.useBrowserCache = true;
+const transformersEnv = env as typeof env & {
+    allowLocalModels: boolean;
+    useBrowserCache: boolean;
+};
+
+transformersEnv.allowLocalModels = false;
+transformersEnv.useBrowserCache = true;
 
 type TtsOutput = { audio: Float32Array; sampling_rate: number };
 type TtsSynthesizer = (
