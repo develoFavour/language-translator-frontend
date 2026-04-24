@@ -41,6 +41,7 @@ export function TranslateForm({
 	const [error, setError] = useState<string | null>(null);
 	const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 	const [speaking, setSpeaking] = useState(false);
+	const [isClarifying, setIsClarifying] = useState(false);
 
 	const mapToBcp47 = (lang: string) => {
 		const map: Record<string, string> = {
@@ -84,25 +85,48 @@ export function TranslateForm({
 		return v;
 	};
 
-	const handleTranslate = async () => {
-		if (!sourceText.trim()) return;
-		setIsTranslating(true);
+	const buildTranslation = (response: {
+		translation: {
+			id: string;
+			sourceText: string;
+			translatedText: string;
+			sourceLang: string;
+			targetLang: string;
+			provider?: string;
+			mode?: string;
+			confidence?: string;
+			needsClarification?: boolean;
+			clarificationOptions?: string[];
+			note?: string;
+			createdAt: string;
+		};
+	}): Translation => ({
+		id: response.translation.id,
+		sourceText: response.translation.sourceText,
+		translatedText: response.translation.translatedText,
+		sourceLang: response.translation.sourceLang,
+		targetLang: response.translation.targetLang,
+		provider: response.translation.provider,
+		mode: response.translation.mode,
+		confidence: response.translation.confidence,
+		needsClarification: response.translation.needsClarification,
+		clarificationOptions: response.translation.clarificationOptions || [],
+		note: response.translation.note,
+		timestamp: new Date(response.translation.createdAt),
+		createdAt: new Date(response.translation.createdAt),
+	});
+
+	const runTranslation = async (text: string, contextHint?: string) => {
+		if (!text.trim()) return;
 		setError(null);
 		try {
 			const response = await api.translations.translate(
-				sourceText,
+				text,
 				sourceLang,
-				targetLang
+				targetLang,
+				contextHint
 			);
-			const translation: Translation = {
-				id: response.translation.id,
-				sourceText: response.translation.sourceText,
-				translatedText: response.translation.translatedText,
-				sourceLang: response.translation.sourceLang,
-				targetLang: response.translation.targetLang,
-				timestamp: new Date(response.translation.createdAt),
-				createdAt: new Date(response.translation.createdAt),
-			};
+			const translation = buildTranslation(response);
 			setTranslatedText(translation.translatedText);
 			setCurrentTranslation(translation);
 			onTranslate(translation);
@@ -113,8 +137,26 @@ export function TranslateForm({
 			} else {
 				setError("Failed to translate. Please try again.");
 			}
+		}
+	};
+
+	const handleTranslate = async () => {
+		if (!sourceText.trim()) return;
+		setIsTranslating(true);
+		try {
+			await runTranslation(sourceText);
 		} finally {
 			setIsTranslating(false);
+		}
+	};
+
+	const handleClarify = async (option: string) => {
+		if (!sourceText.trim()) return;
+		setIsClarifying(true);
+		try {
+			await runTranslation(sourceText, option);
+		} finally {
+			setIsClarifying(false);
 		}
 	};
 
@@ -263,6 +305,8 @@ export function TranslateForm({
 					languages={LANGUAGES}
 					canRate={canRate}
 					ttsEnabled={isTtsEnabled(targetLang)}
+					isClarifying={isClarifying}
+					onClarify={handleClarify}
 				/>
 			</div>
 

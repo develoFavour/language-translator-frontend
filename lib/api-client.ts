@@ -122,11 +122,17 @@ export const api = {
 		translate: async (
 			sourceText: string,
 			sourceLang: string,
-			targetLang: string
+			targetLang: string,
+			contextHint?: string
 		) => {
 			return fetchAPI("/translate", {
 				method: "POST",
-				body: JSON.stringify({ sourceText, sourceLang, targetLang }),
+				body: JSON.stringify({
+					sourceText,
+					sourceLang,
+					targetLang,
+					...(contextHint ? { contextHint } : {}),
+				}),
 			});
 		},
 

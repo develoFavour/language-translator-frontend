@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export function LandingHeader() {
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -36,10 +37,14 @@ export function LandingHeader() {
 				<div className="flex items-center justify-between h-16 md:h-20">
 					{/* Logo */}
 					<Link href="/" className="flex items-center gap-2 md:gap-3 group">
-						<div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-[#e78a53] to-[#f5a76e] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-							<span className="text-black font-bold text-xl md:text-2xl">
-								L
-							</span>
+						<div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+							<Image
+								src={"/hallmark (1).svg"}
+								height={100}
+								width={100}
+								alt="logo"
+								className="rounded-full"
+							/>
 						</div>
 						<span className="text-lg md:text-xl font-bold text-white">
 							Campuslingo

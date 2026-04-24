@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import Image from "next/image";
 
 export function LandingFooter() {
 	const footerLinks = {
@@ -36,8 +37,14 @@ export function LandingFooter() {
 					{/* Brand */}
 					<div className="lg:col-span-2">
 						<Link href="/" className="flex items-center gap-3 mb-4">
-							<div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#e78a53] to-[#f5a76e] flex items-center justify-center">
-								<span className="text-black font-bold text-xl">L</span>
+							<div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+								<Image
+									src={"/hallmark (1).svg"}
+									height={100}
+									width={100}
+									alt="logo"
+									className="rounded-full"
+								/>
 							</div>
 							<span className="text-xl font-bold text-white">Campuslingo</span>
 						</Link>

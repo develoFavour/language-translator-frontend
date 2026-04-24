@@ -13,12 +13,12 @@ import {
 	User,
 	Loader2,
 	LayoutDashboard,
-	Bot,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { api } from "@/lib/api-client";
 import { toast } from "sonner";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface Translation {
 	id: string;
@@ -26,6 +26,12 @@ export interface Translation {
 	translatedText: string;
 	sourceLang: string;
 	targetLang: string;
+	provider?: string;
+	mode?: string;
+	confidence?: string;
+	needsClarification?: boolean;
+	clarificationOptions?: string[];
+	note?: string;
 	timestamp: Date;
 	createdAt: Date;
 }
@@ -70,7 +76,16 @@ export default function Home() {
 					translatedText: String(t.translatedText),
 					sourceLang: String(t.sourceLang),
 					targetLang: String(t.targetLang),
+					provider: t.provider ? String(t.provider) : undefined,
+					mode: t.mode ? String(t.mode) : undefined,
+					confidence: t.confidence ? String(t.confidence) : undefined,
+					needsClarification: Boolean(t.needsClarification),
+					clarificationOptions: Array.isArray(t.clarificationOptions)
+						? t.clarificationOptions.map(String)
+						: [],
+					note: t.note ? String(t.note) : undefined,
 					timestamp: new Date(String(t.createdAt)),
+					createdAt: new Date(String(t.createdAt)),
 				})) || [];
 			setTranslations(historyTranslations);
 		} catch (err) {
@@ -116,7 +131,7 @@ export default function Home() {
 			await api.feedback.submit(
 				feedback.translationId,
 				feedback.rating,
-				feedback.suggestedText
+				feedback.suggestedText,
 			);
 			toast.success("Feedback submitted successfully");
 		} catch (err) {
@@ -131,9 +146,16 @@ export default function Home() {
 				<div className="container mx-auto px-4 py-4 flex items-center justify-between">
 					<div className="flex items-center gap-3 group">
 						<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center glow-primary group-hover:scale-105 transition-transform duration-300">
-							<span className="text-primary-foreground font-bold text-2xl">
+							<Image
+								src={"/hallmark (1).svg"}
+								height={100}
+								width={100}
+								alt="logo"
+								className="rounded-full"
+							/>
+							{/* <span className="text-primary-foreground font-bold text-2xl">
 								L
-							</span>
+							</span> */}
 						</div>
 						<div className="group-hover:translate-x-1 transition-transform duration-300">
 							<h1 className="text-xl font-bold text-gradient">Campuslingo</h1>
@@ -256,7 +278,8 @@ export default function Home() {
 							<span className="text-gradient">Connect Cultures</span>
 						</h2>
 						<p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-							Translate between Yoruba, Igbo, Hausa, and more with accurate
+							Translate between Yoruba, Igbo, Hausa, and more with context-aware
+							AI support for trickier terms like medical words, plus accurate
 							pronunciation. Built for multilingual campus communities.
 						</p>
 					</div>

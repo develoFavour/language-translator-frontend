@@ -1,6 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Volume2, Copy, ThumbsUp, Sparkles, Loader2 } from "lucide-react";
+import {
+	Volume2,
+	Copy,
+	ThumbsUp,
+	Sparkles,
+	Loader2,
+	AlertTriangle,
+} from "lucide-react";
 import type { Translation } from "@/app/page";
 
 interface Language {
@@ -20,6 +27,8 @@ interface TargetDisplayProps {
 	speaking: boolean;
 	languages: Language[];
 	ttsEnabled: boolean;
+	isClarifying?: boolean;
+	onClarify?: (option: string) => void;
 	canRate?: boolean;
 }
 
@@ -34,6 +43,8 @@ export function TargetDisplay({
 	speaking,
 	languages,
 	ttsEnabled,
+	isClarifying = false,
+	onClarify,
 	canRate = true,
 }: TargetDisplayProps) {
 	const currentLanguage = languages.find((l) => l.code === targetLang);
@@ -80,9 +91,43 @@ export function TargetDisplay({
 			</div>
 			<div className="min-h-[200px] text-lg">
 				{translatedText ? (
-					<p className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-						{translatedText}
-					</p>
+					<div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+						<p>{translatedText}</p>
+						{currentTranslation?.needsClarification && (
+							<div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 space-y-3">
+								<div className="flex items-start gap-2 text-sm text-amber-200">
+									<AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+									<p>
+										This short term may need more context for the most accurate
+										translation.
+									</p>
+								</div>
+								{currentTranslation.note && (
+									<p className="text-sm text-muted-foreground">
+										{currentTranslation.note}
+									</p>
+								)}
+								{currentTranslation.clarificationOptions &&
+									currentTranslation.clarificationOptions.length > 0 && (
+										<div className="flex flex-wrap gap-2">
+											{currentTranslation.clarificationOptions.map((option) => (
+												<Button
+													key={option}
+													type="button"
+													variant="outline"
+													size="sm"
+													disabled={isClarifying}
+													onClick={() => onClarify?.(option)}
+													className="rounded-full text-xs"
+												>
+													{option}
+												</Button>
+											))}
+										</div>
+									)}
+							</div>
+						)}
+					</div>
 				) : (
 					<p className="text-gray-500 flex items-center gap-2">
 						<Sparkles className="h-4 w-4" />
